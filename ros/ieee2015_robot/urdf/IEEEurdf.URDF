@@ -1,0 +1,605 @@
+<robot name="ieee2015_robot">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.000264760661064783 0.00664648963349924 0.000264762912808713"
+        rpy="0 0 0" />
+      <mass
+        value="15.15919256315212" /><!-- initialy 1.159-->
+      <inertia
+        ixx="0.0067094003476943"
+        ixy="-2.34510261921351E-06"
+        ixz="2.76425784672043E-05"
+        iyy="0.0107618075316179"
+        iyz="2.34511530954424E-06"
+        izz="0.00471279526237124" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 0.3" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/base_link_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="FLWheel">
+    <inertial>
+      <origin
+        xyz="0.00388945308315219 4.79531763399738E-06 -1.38067043967127E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0736541264322109" /> <!--orig 0.07-->
+      <inertia
+        ixx="2.77194970489744E-05"
+        ixy="-3.49012075170458E-09"
+        ixz="9.77296011958984E-10"
+        iyy="1.93054417330485E-05"
+        iyz="-8.00993708107148E-10"
+        izz="1.93080458554619E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/FLWheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/FLWheel_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="FLWheelCont"
+    type="continuous">
+    <origin
+      xyz="0.1171 -0.099064 -0.040162"
+      rpy="1.5708 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="FLWheel" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="FRWheel">
+    <inertial>
+      <origin
+        xyz="-0.238089456274567 3.97925711011909E-06 2.9933165490853E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0736541281508339" />  <!---->
+      <inertia
+        ixx="2.77194939807717E-05"
+        ixy="2.89824828067423E-09"
+        ixz="2.20292420934118E-09"
+        iyy="1.93063135407214E-05"
+        iyz="1.46689816627202E-09"
+        izz="1.93071731398088E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/FRWheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/FRWheel_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="FRWheelCont"
+    type="continuous">
+    <origin
+      xyz="0.1171 -0.09906355201 -0.0401615"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="FRWheel" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="BLWheel">
+    <inertial>
+      <origin
+        xyz="0.00388945627456712 3.97925711014685E-06 -2.99331654884938E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0736541281508339" />  <!---->
+      <inertia
+        ixx="2.77194939807717E-05"
+        ixy="-2.89824828068812E-09"
+        ixz="2.2029242093398E-09"
+        iyy="1.93063135407214E-05"
+        iyz="-1.46689816627361E-09"
+        izz="1.93071731398088E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/BLWheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/BLWheel_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="BLWheelCont"
+    type="continuous">
+    <origin
+      xyz="0.1171 0.0990635520100003 -0.0401615"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="BLWheel" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="BRWheel">
+    <inertial>
+      <origin
+        xyz="-0.00636445308315207 4.79531763405289E-06 1.38067043978229E-06"
+        rpy="0 0 0" />
+      <mass
+        value="0.0736541264322109" />   <!---->
+      <inertia
+        ixx="2.77194970489743E-05"
+        ixy="3.49012075168172E-09"
+        ixz="9.77296011957692E-10"
+        iyy="1.93054417330485E-05"
+        iyz="8.00993708090894E-10"
+        izz="1.93080458554619E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/BRWheel.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/BRWheel_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="BRWheelCont"
+    type="continuous">
+    <origin
+      xyz="-0.114625 0.09906355201 -0.0401615"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="BRWheel" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="ArmYRot">
+    <inertial>
+      <origin
+        xyz="0.000681964404144919 0.0310539448648574 -0.0127837530436466"
+        rpy="0 0 0" />
+      <mass
+        value="0.271743531126574" />  <!--was .57-->
+      <inertia
+        ixx="0.00130664575781196"
+        ixy="2.01805366799632E-05"
+        ixz="2.44737795526061E-06"
+        iyy="0.00169284950533526"
+        iyz="5.18921274682049E-05"
+        izz="0.00108415740916047" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmYRot.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.666666666666667 0.694117647058824 0.764705882352941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmYRot_col.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ArmYRotCont"
+    type="revolute">
+    <origin
+      xyz="0 0 0.02266"
+      rpy="1.5708 -4.2993E-16 -3.14" />
+    <parent
+      link="base_link" />
+    <child
+      link="ArmYRot" />
+    <axis
+      xyz="0 -1 0" />
+      <limit
+      lower="-999"
+      upper="999"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="ArmRot1">
+    <inertial>
+      <origin
+        xyz="0.00851780401293389 0.0652472578677626 0.0130718014658456"
+        rpy="0 0 0" /><!--
+        0.00851780401293389 0.0652472578677626 0.0130718014658456
+        0 0 0
+      -->
+      <mass
+        value="0.187629627425225" /> <!--was .24-->
+      <inertia
+        ixx="0.00083952384826181"
+        ixy="5.66840333807547E-05"
+        ixz="-2.23733251784933E-05"
+        iyy="0.000383812124258634"
+        iyz="0.000139676728992712"
+        izz="0.000756587555727813" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmRot1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.666666666666667 0.694117647058824 0.764705882352941 1" />
+      </material>
+    </visual>
+    <!--
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmRot1_col.STL" />
+      </geometry>
+    </collision>
+  -->
+  </link>
+  <joint
+    name="ArmRot1Rev"
+    type="revolute">
+    <origin
+      xyz="1.143E-05 0.057267 0.020728"
+      rpy="1.35 -1.1102E-16 1.7931E-21" />
+      <!--
+        1.143E-05 0.057267 0.020728
+        -7.3956E-32 -1.1102E-16 1.7931E-21
+      -->
+    <parent
+      link="ArmYRot" />
+    <child
+      link="ArmRot1" />
+    <axis
+      xyz="1 0 0" />
+      <!-- -1.77,1.37 -->
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="10"
+      velocity="1" />
+  </joint>
+  <link
+    name="ArmRot2">
+    <inertial>
+      <origin
+        xyz="0.00563335405046204 -0.0743495625672852 0.0774120463323625"
+        rpy="0 0 0" />
+      <mass
+        value="0.204282093236145" /> <!--was .27-->
+      <inertia
+        ixx="0.00181284257514748"
+        ixy="5.21711953619901E-05"
+        ixz="8.55557751729304E-06"
+        iyy="0.000875758646833159"
+        iyz="-0.000829845988777018"
+        izz="0.00111595357767381" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmRot2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.666666666666667 0.694117647058824 0.764705882352941 1" />
+      </material>
+    </visual>
+    <!--
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ieee2015_robot/meshes/ArmRot2_col.STL" />
+      </geometry>
+    </collision>
+  -->
+  </link>
+  <joint
+    name="ArmRot2Rev"
+    type="revolute">
+    <origin
+      xyz="-1.143E-05 0.13289 0.065139"
+      rpy="-2.1 0 6.1824E-18" />
+      <!--
+        -1.143E-05 0.13289 0.065139
+        4.9304E-32 0 6.1824E-18
+      -->
+    <parent
+      link="ArmRot1" />
+    <child
+      link="ArmRot2" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-3"
+      upper="3"
+      effort="10"
+      velocity="1" />
+  </joint>
+
+
+ <gazebo reference="FLWheel">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="FRWheel">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="BLWheel">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="BRWheel">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+
+
+  <gazebo reference="base_link">
+      <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="camera_link">
+      <material>Gazebo/Red</material>
+  </gazebo>
+  <gazebo reference="kinect_link">
+      <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <gazebo reference="ArmYRot">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="ArmRot1">
+      <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="ArmRot2">
+      <material>Gazebo/Gold</material>
+  </gazebo>
+
+
+  <gazebo>
+      <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+        <commandTopic>twist</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <odometryRate>20.0</odometryRate>
+        <robotBaseFrame>base_link</robotBaseFrame>
+      </plugin>
+  </gazebo>
+
+
+
+  <transmission name="ArmYRotTrans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ArmYRotCont">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="ArmYRotMotor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="ArmRot1Trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ArmRot1Rev">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="ArmRot1Motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="ArmRot2Trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ArmRot2Rev">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="ArmRot2Motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/robot</robotNamespace>
+    </plugin>
+  </gazebo>
+
+
+  <!-- Camera -->
+  <joint name="camera_joint" type="fixed">
+     <origin xyz="0 -.15 .020" rpy="0 .587 -1.57"/>
+     <parent link="base_link"/>
+     <child link="camera_link"/>
+     <axis xyz="1 0 0" />
+  </joint>
+
+  <link name="camera_link">
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.025 0.025 0.025"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.025 0.025 0.025"/>
+      </geometry>
+    </collision> 
+  </link>
+
+   <gazebo reference="camera_link">
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.36</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>360</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>robot/camera1</cameraName>
+        <imageTopicName>image</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo> 
+</robot>

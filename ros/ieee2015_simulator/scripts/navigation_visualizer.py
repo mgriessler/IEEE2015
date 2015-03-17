@@ -1,64 +1,135 @@
 #!/usr/bin/env python
 import rospy
 import pygame
-from geometry_msgs.msg import Twist, Point
+import random
+import os, sys
+
+from std_msgs.msg import Header
+from geometry_msgs.msg import Twist, Point, PoseStamped, Pose, Quaternion
+from tf import transformations as tf_trans
+
+import math
+import numpy as np
 
 #constants
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
-BG_COLOR = 0,0,0
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 400
+WAYPOINT_LENGTH = 100
+BG_COLOR = 200,200,100
+
+PXL_PER_METER = 15  # Or something like that
 
 #global variables
-hz = 20.0
-ms = (int)(1000/hz)
-sec = ms / 1000.0
+fps = 60.0
 
-#initalizations for pygame
-clock = pygame.time.Clock()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-class Rover:
+#waypoint are shared with other files
+waypoint_list = [Point(400, -200, 0), Point(600, -200, 0), Point(0, -300, 0)]
+
+def load_image(name, colorkey=False):
+    #get file directory
+    sim_folder = os.path.dirname(os.path.dirname(sys.argv[0]))
+    name = os.path.join(sim_folder, 'data', name)
+    try:
+        image = pygame.image.load(name)
+        colorkey = image.get_at((0, 0))
+        if colorkey is True:
+            image.set_colorkey(colorkey, pygame.RLEACCEL)
+    except:
+        print 'Unable to load: ' + name
+    return image.convert_alpha() #Convert any transparency in the image
+    
+class Rover(object):
     box_color = 192, 192, 192
     def __init__(self, x, y):
-        #set intial values
-        self.navbox = pygame.Rect((x, y, 20, 20))
-        self.degree = 1
+        self.rover_rect = pygame.Rect((0, 0, 50, 50))
+        self.rover_rect.center = (x, y)
+        #image surface around the box
+        self.master_image = pygame.Surface((50, 50))
+        self.master_image = load_image('rover.png')
+        self.rover_image = self.master_image
+        #self.rover_rect = self.rover_image.get_rect()
         
-        #sufrace around the box
-        self.navsurface = pygame.Surface((20, 20))
-        self.navsurface.fill((200, 0, 0))
+        #set intial values
+        self.direction = 0
+        self.velocity = Twist()
+        
         #color key for blitting
-        self.navsurface.set_colorkey((255, 0, 0))
+        self.rover_image.set_colorkey((0, 0, 0))
 
-    def render(self, v):
+        # Add a pose publisher
+        self.position_vector = np.array([x, -y], np.float32)
+        self.pose_pub = rospy.Publisher('pose', PoseStamped)
+
+    def reposition(self):
         #find new position based on update frequency
-        #sec = ms / 1000.0 seconds have passed since last update
-        dx = v.linear.x * sec
-        dy = v.linear.y * sec
+        #dt seconds have passed since last frame update
+        dt = 1.0/fps
+        dx = self.velocity.linear.x * dt * PXL_PER_METER
+        dy = self.velocity.linear.y * dt * PXL_PER_METER
+
+        self.position_vector += (self.forward_vector * dx) + (self.left_vector * dy)
+        
+        self.rover_rect.x, self.rover_rect.y = self.position_vector[0], -self.position_vector[1]
 
         #find new angle of orientation
-        dtheta = v.angular.z * sec
-
-        #update position
-        self.navbox.x += dx
-        self.navbox.y += dy
-
-        #update orientation
-        self.degree += dtheta
-        if self.degree > 360:
-            self.degree -= 360
-
-        #draw the location (base) of the robot
-        #pygame.draw.rect(screen, self.box_color, self.navbox, 0 )
-
-        #rotate surface
-        rotatedSurf = pygame.transform.rotate(self.navsurface, self.degree)
-
-        #get the rect of the rotated surface and set it's center to the base (navbox)
-        rotRect = rotatedSurf.get_rect()
-        rotRect.center = self.navbox.center
-        screen.blit(rotatedSurf, rotRect)
+        dtheta = math.degrees(self.velocity.angular.z) * dt
         
+        #update direction
+        self.direction += dtheta
+        self.direction % 360
+        
+        #old_center = self.rover_rect.center
+        #self.rover_image = pygame.transform.rotate(self.master_image, self.direction)
+        #self.rover_rect = self.rover_image.get_rect()
+        #self.rover_rect.center = old_center
+        #old_center = self.rover_rect.center
+        
+    
+        #rotate surface
+        self.rover_image = pygame.transform.rotate(self.master_image, self.direction)
+        
+        #get the rect of the rotated surface and set it's center to the base (self.rover_rect)
+        self.rover_rect = self.rover_image.get_rect(center = self.rover_rect.center) 
+        
+        # Publish position to 'pose' topic
+        self.publish_pose()
+        
+    def set_velocity(self, v):
+        self.velocity = v
+        
+    def render(self):
+        self.reposition()
+        screen.blit(self.rover_image, (self.rover_rect.center[0]-(self.rover_rect.width/2), self.rover_rect.center[1]-(self.rover_rect.height/2)))
+        
+    def publish_pose(self):
+        '''Publish Pose
+        '''
+        _orientation = tf_trans.quaternion_from_euler(0,0,self.rad_angle)
+        self.pose_pub.publish(
+            PoseStamped(
+                header = Header(
+                    stamp=rospy.Time.now(),
+                    frame_id='/course',
+                ),
+                pose = Pose(
+                    position = Point(self.position_vector[0], self.position_vector[1], 0.0),
+                    orientation = Quaternion(*_orientation), #Radians
+                )
+            )
+        )
+
+    @property 
+    def rad_angle(self):
+        return math.radians(self.direction)
+
+    @property
+    def forward_vector(self):
+        return np.array([math.cos(self.rad_angle), math.sin(self.rad_angle)])
+
+    @property
+    def left_vector(self):
+        return np.array([math.cos(self.rad_angle+math.pi/2), math.sin(self.rad_angle+math.pi/2)])
 
         
 class Course:
@@ -67,8 +138,7 @@ class Course:
     def __init__(self, rover, waypoints):
         self.rover = rover
         self.waypoints = waypoints
-        self.target = waypoints[0]
-        #I ASSUMING lists are false by default!!!!
+        #false by default
         self.isPointVisited = []
         for w in waypoints :
             self.isPointVisited.append(False)
@@ -76,40 +146,62 @@ class Course:
     def render_waypoints(self):
         i = 0
         for point in self.waypoints:
-            if abs(point.x - self.rover.navbox.x) <= 20  and abs(point.y - self.rover.navbox.y) <= 20:
+            box = pygame.Rect((0, 0, 20, 20))
+            box.center = (point.x, -point.y)
+            boundary = pygame.Rect((point.x, -point.y, WAYPOINT_LENGTH, WAYPOINT_LENGTH))
+            boundary.center = (point.x, -point.y)
+            if boundary.colliderect(self.rover.rover_rect):
                 self.isPointVisited[i] = True
-            box = pygame.Rect((point.x, point.y, 20, 20))
+            
             if self.isPointVisited[i]:
-                pygame.draw.rect(screen, self.visited_color, box, 0)
+                pygame.draw.rect(screen, self.visited_color, boundary, 0)
             else:
-                pygame.draw.rect(screen, self.point_color, box, 0)
+                pygame.draw.rect(screen, (250,250,250), boundary, 0)
+            pygame.draw.rect(screen, self.point_color, box, 0)
                 
             i = i + 1
                 
-    def render(self, rover_velocity):
+    def render(self):
         #clear screen
         screen.fill(BG_COLOR)
 
         #render objects on the surface
-        self.rover.render(rover_velocity)
         self.render_waypoints()
+        self.rover.render()
         pygame.display.flip()
-
+        ###event handling###
+        ev = pygame.event.get()
+        for event in ev:
+            #get the position when mouse is released, so it can be published
+            if event.type == pygame.MOUSEBUTTONUP:
+                main_Rover.publish_pose()
         #mas frames per second
-        clock.tick(240)
+        clock.tick(fps)
+        
+    def callback(self, rover_velocity):
+        self.rover.set_velocity(rover_velocity)
         
 if __name__ == '__main__':
-    waypoint = Point()
-    waypoint.x = SCREEN_WIDTH/2
-    waypoint.y = SCREEN_HEIGHT/2
-    waypoint.z = 0
-    test_waypoints = [waypoint]
     
+    #initalizations for pygame
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
     main_Rover = Rover(0, SCREEN_HEIGHT/2)
-    main_Course = Course(main_Rover, test_waypoints)
+    main_Course = Course(main_Rover, waypoint_list)
     
     #listener initalizations
     rospy.init_node('navigation_visualizer', anonymous=True)
+    
     #when a message is recieved the main_Course's render function will be called
-    rospy.Subscriber("navigation_control_signals", Twist, main_Course.render)
-    rospy.spin()
+    rospy.Subscriber("desired_velocity", Twist, main_Course.callback)
+    #rospy.Subscriber("automatic_navigation_twists", Twist, main_Course.callback)
+    
+    while not rospy.is_shutdown():
+        
+        main_Course.render()
+      
+        
+          
+        rospy.spin()
+

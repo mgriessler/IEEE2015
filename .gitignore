@@ -1,24 +1,28 @@
-#Debug Folder
+# Debug Folder
 Debug/
 
-#Misc
+# Misc
 .d
 .o
 .idea
 *.swp
 $
+todo
 
-#Python
+# Folders
+/Documents/
+
+# Python
 *~
 *.pyc
 
-#Images
-*.png
-*.jpg
-*.tif
+#ros
+*.o
 
+# Images
 *.pdf
 
-#Just in case...
+# Just in case...
 *.iso
-
+.DS_Store
+*.DS_Store
